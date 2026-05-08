@@ -1,10 +1,9 @@
 from pathlib import Path
 
-import numpy as np
 import open3d as o3d
 
 
-def load_point_cloud(path: str | Path) -> np.ndarray:
+def load_point_cloud(path: str | Path) -> o3d.geometry.PointCloud:
     path = Path(path)
     if not path.is_file():
         raise FileNotFoundError(path)
@@ -15,12 +14,17 @@ def load_point_cloud(path: str | Path) -> np.ndarray:
 
     if suffix == ".ply":
         pcd = o3d.io.read_point_cloud(str(path))
-        points = np.asarray(pcd.points)
-        if points.size > 0:
-            return points
+        if len(pcd.points) > 0:
+            return pcd
 
     mesh = o3d.io.read_triangle_mesh(str(path))
-    points = np.asarray(mesh.vertices)
-    if points.size == 0:
+    if len(mesh.vertices) == 0:
         raise ValueError(f"no points or vertices found in {path}")
-    return points
+
+    if not mesh.has_vertex_normals():
+        mesh.compute_vertex_normals()
+
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = mesh.vertices
+    pcd.normals = mesh.vertex_normals
+    return pcd
