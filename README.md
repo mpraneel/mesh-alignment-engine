@@ -5,16 +5,21 @@ ICP-based 3D mesh alignment pipeline in Python. Given two surface meshes
 rigid transformation that best aligns them and visualizes residual surface
 deviation as a heatmap.
 
-Built as practical groundwork for 3D spatial software engineering, with
-direct relevance to dental scan processing, reverse engineering, and
-robotics perception pipelines.
+Run `python align.py scan_a.ply scan_b.ply` and get back a 4x4 transform
+matrix, RMSE score, and a colored deviation heatmap in under 10 seconds
+on a standard mesh.
 
-<img width="550" height="400" alt="icp_mesh_alignment_pipeline_static" src="https://github.com/user-attachments/assets/872fb73b-4102-4ef9-bfca-37e7c8206baf" />
+<img width="1920" height="1061" alt="ScreenCapture_2026-05-10-19-18-27" src="https://github.com/user-attachments/assets/de909647-1357-4164-bc88-0e4d19d05860" />
+
 
 
 ---
 
 ## Algorithm: Iterative Closest Point (ICP)
+
+
+<img width="550" height="400" alt="icp_mesh_alignment_pipeline_static" src="https://github.com/user-attachments/assets/872fb73b-4102-4ef9-bfca-37e7c8206baf" />
+
 
 ICP estimates a rigid transformation (rotation + translation) between two
 point clouds by iterating three steps until convergence:
@@ -45,20 +50,41 @@ faster and more accurately on smooth surfaces.
 
 ---
 
-## Scope
+## Usage
 
-**MVP**
+```bash
+pip install open3d numpy trimesh matplotlib
+
+python align.py mesh_a.ply mesh_b.ply
+python align.py mesh_a.ply mesh_b.ply --threshold 0.001
+python align.py mesh_a.ply mesh_b.ply --export
+```
+
+Output:
+```
+RMSE:     3.135359e-17
+fitness:  1.000000
+transform (4x4):
+      0.996195      0.087156      0.000000     -0.010398
+     -0.087156      0.996195      0.000000     -0.004109
+     -0.000000     -0.000000      1.000000      0.000000
+      0.000000      0.000000      0.000000      1.000000
+```
+
+---
+
+## MVP
+
 - Load two `.ply` or `.stl` files
 - Run Open3D point-to-plane ICP
-- Output: final RMSE alignment error + 4x4 transform matrix
-- Render: side-by-side before/after view + colored deviation heatmap
-  (blue = well-aligned, red = high deviation)
-- CLI: `python align.py mesh_a.ply mesh_b.ply --threshold 0.5`
+- Output RMSE alignment error and 4x4 transform matrix
+- Render side-by-side before/after view and colored deviation heatmap
+- CLI with `--threshold` and `--export` flags
 
-**Stretch goals**
+## Stretch goals
+
 - Multi-resolution ICP (coarse to fine, faster convergence)
 - Export aligned mesh as new `.ply`
-- Programmatic offset mesh generator for controlled testing
 
 ---
 
