@@ -219,3 +219,7 @@ __marimo__/
 
 # Architecture decisions
 CLAUDE.md
+
+# Open3D interactive viewer dumps (Ctrl+P / Ctrl+S in the GUI)
+ScreenCamera_*.json
+ScreenCapture_*.png
