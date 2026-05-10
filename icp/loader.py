@@ -15,6 +15,10 @@ def load_point_cloud(path: str | Path) -> o3d.geometry.PointCloud:
     if suffix == ".ply":
         pcd = o3d.io.read_point_cloud(str(path))
         if len(pcd.points) > 0:
+            if not pcd.has_normals():
+                pcd.estimate_normals(
+                    search_param=o3d.geometry.KDTreeSearchParamKNN(knn=30)
+                )
             return pcd
 
     mesh = o3d.io.read_triangle_mesh(str(path))
