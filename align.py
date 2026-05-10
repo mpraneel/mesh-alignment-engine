@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import sys
 from pathlib import Path
 
@@ -9,6 +10,7 @@ import numpy as np
 
 from icp.loader import load_point_cloud
 from icp.registration import align_point_to_plane
+from icp.visualize import show_alignment, show_heatmap
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -70,6 +72,10 @@ def main(argv: list[str] | None = None) -> int:
     print(f"fitness:  {result.fitness:.6f}")
     print("transform (4x4):")
     print(format_matrix(T))
+
+    transformed = copy.deepcopy(source).transform(T)
+    show_alignment(source, target, transformed)
+    show_heatmap(transformed, target)
     return 0
 
 
