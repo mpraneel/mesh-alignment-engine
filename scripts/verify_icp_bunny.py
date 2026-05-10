@@ -10,8 +10,8 @@ import open3d as o3d
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from icp.align import align_point_to_plane
 from icp.loader import load_point_cloud
+from icp.registration import align_point_to_plane
 from icp.solver import svd_solve
 
 
